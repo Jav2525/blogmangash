@@ -1,0 +1,73 @@
+# Configuración del Blog de Manga en GitHub Pages
+title: "Blog Manga SH"
+description: "Blog especializado en manga con lector integrado"
+url: "https://jav2525.github.io"
+baseurl: "/blogmangash"
+
+# Información del autor
+author:
+  name: "Jav2525"
+  email: "jav2525@example.com"
+  github: "Jav2525"
+  twitter: "tu-usuario"
+
+# Configuración del blog
+timezone: Europe/Madrid
+lang: es
+permalink: /:categories/:year/:month/:day/:title/
+
+# Paginación
+paginate: 6
+paginate_path: "/page/:num/"
+
+# Plugins necesarios
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate
+
+# Configuración de construcción
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Archivos a excluir
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Configuración de colecciones para manga
+collections:
+  manga_series:
+    output: true
+    permalink: /:collection/:name/
+
+# Valores por defecto
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+  - scope:
+      path: ""
+      type: "manga_series"
+    values:
+      layout: "manga-series"
+
+# Configuración social
+social:
+  name: "Tu Nombre"
+  links:
+    - https://github.com/tu-usuario
+    - https://twitter.com/tu-usuario
+
+# SEO
+logo: /assets/images/logo.png
