@@ -1,0 +1,39 @@
+---
+layout: default
+title: Admin Dashboard
+permalink: /admin/dashboard.html
+---
+
+<h1>Admin Dashboard</h1>
+
+<section id="admin-panel">
+  <h2>Publicar manga (BBCode - imgbox)</h2>
+
+  <p>Introduce el BBCode de imgbox que contiene la imagen del capítulo. Ejemplo:</p>
+  <pre>[URL=https://imgbox.com/m0KMI0WG][IMG]https://images2.imgbox.com/ce/36/m0KMI0WG_o.jpg[/IMG][/URL]</pre>
+
+  <label for="bbcode-input">BBCode:</label>
+  <textarea id="bbcode-input" rows="4" style="width:100%"></textarea>
+
+  <div style="margin-top:8px;">
+    <button id="preview-btn">Vista previa</button>
+    <button id="generate-btn">Generar HTML y añadir a lista</button>
+    <button id="clear-btn">Limpiar</button>
+  </div>
+
+  <h3>Previsualización</h3>
+  <div id="preview" class="admin-preview" aria-live="polite"></div>
+
+  <h3>HTML generado</h3>
+  <pre id="generated-html" class="generated-html"></pre>
+
+  <h3>Imágenes añadidas</h3>
+  <ul id="images-list" class="images-list"></ul>
+
+  <div style="margin-top:12px;">
+    <button id="export-post-btn">Exportar como archivo Markdown (descarga)</button>
+  </div>
+
+</section>
+
+<script src="{{ '/assets/js/admin-dashboard.js' | relative_url }}"></script>

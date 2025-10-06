@@ -418,3 +418,24 @@ body {
     justify-content: center;
   }
 }
+
+/* =========================
+   ADMIN DASHBOARD
+   ========================= */
+.admin-preview {
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  min-height: 120px;
+}
+.generated-html {
+  background: rgba(0,0,0,0.4);
+  padding: 12px;
+  border-radius: 6px;
+  color: var(--color-texto-secundario);
+  max-height: 240px;
+  overflow: auto;
+}
+.images-list { list-style: none; padding-left: 0; display: grid; gap: 8px; }
+.images-list li img { max-width: 220px; height: auto; border-radius: 6px; display:block }
