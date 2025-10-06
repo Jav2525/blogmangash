@@ -1,0 +1,219 @@
+---
+layout: default
+---
+
+<article class="manga-post">
+  <header class="post-header">
+    <div class="post-meta-top">
+      {% if page.series %}
+        <span class="manga-series">📚 {{ page.series }}</span>
+      {% endif %}
+      <time class="post-date" datetime="{{ page.date | date_to_xmlschema }}">
+        {{ page.date | date: "%d de %B, %Y" }}
+      </time>
+    </div>
+    
+    <h1 class="post-title">{{ page.title }}</h1>
+    
+    {% if page.tags %}
+    <div class="post-tags">
+      {% for tag in page.tags %}
+        <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <!-- Lector de Manga -->
+  {% if page.pages %}
+  <div class="manga-reader">
+    <!-- Controles del lector -->
+    <div class="reader-controls">
+      <div class="controls-content">
+        <div class="reader-info">
+          <span class="reader-title">{{ page.title }}</span>
+          {% if page.chapter %}
+          <span class="reader-chapter">Capítulo {{ page.chapter }}</span>
+          {% endif %}
+        </div>
+        
+        <div class="control-buttons">
+          <button id="prev-page" class="control-btn">
+            ← Anterior
+          </button>
+          <button id="next-page" class="control-btn">
+            Siguiente →
+          </button>
+          <button id="fullscreen-btn" class="control-btn">
+            � Pantalla completa
+          </button>
+          <button id="settings-btn" class="control-btn">
+            ⚙️ Configuración
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Configuración del lector -->
+    <div class="reader-settings">
+      <h4 class="settings-title">Configuración del Lector</h4>
+      
+      <div class="setting-group">
+        <label class="setting-label">Modo de lectura:</label>
+        <div class="setting-buttons">
+          <button class="setting-btn active" data-view-mode="single">Página simple</button>
+          <button class="setting-btn" data-view-mode="double">Página doble</button>
+        </div>
+      </div>
+      
+      <div class="setting-group">
+        <label class="setting-label">Dirección:</label>
+        <div class="setting-buttons">
+          <button class="setting-btn active" data-direction="ltr">Izq. a Der.</button>
+          <button class="setting-btn" data-direction="rtl">Der. a Izq.</button>
+        </div>
+      </div>
+      
+      <div class="setting-group">
+        <label class="setting-label">Zoom:</label>
+        <input type="range" id="zoom-range" class="setting-range" min="0.5" max="2" step="0.1" value="1">
+      </div>
+    </div>
+    
+    <!-- Contenedor de páginas -->
+    <div id="pages-container" class="pages-container">
+      <div class="loading">Cargando capítulo...</div>
+    </div>
+    
+    <!-- Navegación de páginas -->
+    <div class="page-navigation">
+      <button id="nav-prev" class="nav-btn">← Anterior</button>
+      <div class="page-counter">1 / 1</div>
+      <button id="nav-next" class="nav-btn">Siguiente →</button>
+    </div>
+    
+    <!-- Indicador de progreso -->
+    <div class="progress-indicator"></div>
+  </div>
+  
+  <!-- Datos del manga para JavaScript -->
+  <script type="application/json" id="manga-pages-data">
+{{ page.pages | jsonify }}
+  </script>
+  {% endif %}
+
+  <!-- Contenido del post -->
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <!-- Navegación entre capítulos -->
+  {% if page.series %}
+  <nav class="chapter-navigation">
+    <div class="chapter-nav-content">
+      {% assign series_posts = site.posts | where: "series", page.series | sort: "chapter" %}
+      {% assign current_index = 0 %}
+      {% for post in series_posts %}
+        {% if post.url == page.url %}
+          {% assign current_index = forloop.index0 %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      
+      {% assign prev_index = current_index | minus: 1 %}
+      {% assign next_index = current_index | plus: 1 %}
+      
+      {% if prev_index >= 0 %}
+        {% assign prev_post = series_posts[prev_index] %}
+        <a href="{{ prev_post.url | relative_url }}" class="chapter-nav-link prev">
+          <span class="nav-text">← Capítulo anterior</span>
+          <span class="nav-title">{{ prev_post.title }}</span>
+        </a>
+      {% endif %}
+      
+      {% if next_index < series_posts.size %}
+        {% assign next_post = series_posts[next_index] %}
+        <a href="{{ next_post.url | relative_url }}" class="chapter-nav-link next">
+          <span class="nav-text">Capítulo siguiente →</span>
+          <span class="nav-title">{{ next_post.title }}</span>
+        </a>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+
+  <!-- Información adicional -->
+  {% if page.author %}
+  <div class="post-footer">
+    <div class="author-info">
+      <strong>Publicado por:</strong> {{ page.author }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Comentarios con Utterances -->
+  {% if page.comments != false %}
+  <div class="comments-section">
+    <h3>💬 Comentarios</h3>
+    <div class="utterances-container">
+      <script src="https://utteranc.es/client.js"
+              repo="Jav2525/blogmangash"
+              issue-term="pathname"
+              label="💬 comentarios"
+              theme="photon-dark"
+              crossorigin="anonymous"
+              lang="es"
+              async>
+      </script>
+    </div>
+  </div>
+  {% endif %}
+<!-- Protección básica del contenido -->
+<script>
+// Deshabilitar clic derecho en imágenes del manga
+document.addEventListener('contextmenu', function(e) {
+    if (e.target.classList.contains('manga-page') || e.target.closest('.manga-reader')) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// Deshabilitar arrastrar imágenes
+document.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('manga-page')) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// Deshabilitar selección en el lector
+document.addEventListener('selectstart', function(e) {
+    if (e.target.closest('.manga-reader')) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// Protección adicional con CSS
+const style = document.createElement('style');
+style.textContent = `
+    .manga-page {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-user-drag: none;
+        -khtml-user-drag: none;
+        -moz-user-drag: none;
+        -o-user-drag: none;
+        user-drag: none;
+    }
+    
+    .manga-reader {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+    }
+`;
+document.head.appendChild(style);
+</script>
+</article>
